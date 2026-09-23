@@ -7,8 +7,9 @@ const connection = new Sequelize({
     // Dados de conexão
     dialect: 'mysql',
     host: 'localhost',
-    user: 'root',
-    password: '',
+    username: 'root',
+    password: 'admin',
+    database: 'loja',
     timezone: '-03:00'
 });
 // Exportando o módulo
