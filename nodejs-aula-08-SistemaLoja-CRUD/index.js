@@ -4,11 +4,18 @@ import express from 'express';
 // Importando o arquivo de conexão do Sequelize
 import connection from './config/sequelize-config.js';
 // Iniciando o Express 
-const app = express()
+const app = express();
+
+// configuração do Express
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 // Define o EJS como Renderizador de páginas
 app.set('view engine', 'ejs')
 // Define o uso da pasta "public" para uso de arquivos estáticos
 app.use(express.static('public'))
+
+
 
 // Realizando a conexão com banco de dados
 connection.authenticate().then(() => {
