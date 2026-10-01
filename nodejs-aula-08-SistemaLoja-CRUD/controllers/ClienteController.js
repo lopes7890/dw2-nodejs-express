@@ -1,5 +1,6 @@
 import express from 'express';
 import Cliente from '../models/Cliente.js';
+import { where } from 'sequelize';
 
 const route = express.Router();
 
@@ -34,6 +35,61 @@ route.post("/clientes/cadastrar", (req, res) => {
         res.redirect("/clientes");
     }).catch((error) => {
         console.log(`Ocorreu um erro ao cadastrar o cliente: Erro ${error}`);
+    });
+});
+// Rota para excluir o cliente
+// :id -> Cria um parâmetro na rota
+route.get("/clientes/excluir/:id", (req, res) => {
+    // Criando uma variável para armazenar o parâmetro que chega pela URL
+    const id = req.params.id
+    Cliente.destroy({
+        where : {
+            id: id,
+        }
+    }).then(() => {
+        res.redirect("/clientes");
+    }).catch((error) => {
+        console.log(`Ocorre um erro ao excluir o cliente. Erro: ${error}`);
+    });
+});
+
+// Rota de edição do cliente
+route.get("/clientes/editar/:id", (req, res) => {
+    // Coletando o parâmetro da URL
+    const id = req.params.id;
+    // Buscando o cliente no Banco pela ID
+    Cliente.findByPk(id).then(cliente => {
+        res.render("clienteEditar", {
+            // Enviando um objeto com os dados do cliente para a página
+            cliente : cliente,
+        });
+    }).catch((error) => {
+        console.log(`Ocorreu um erro ao buscar o cliente. Erro ${error}`);
+    });
+});
+
+// Rota que altera cliente no banco de dados
+route.post("/clientes/alterar", (req, res) => {
+    // Coletando os dados do formulário
+    const id = req.body.id;
+    const nome = req.body.nome;
+    const cpf = req.body.cpf;
+    const endereco = req.body.endereco;
+
+    // Chamando o Model e pedindo para alterar no banco de dados
+    Cliente.update(
+        {
+            nome: nome,
+            cpf: cpf,
+            endereco: endereco
+        },
+        {
+            where: {id: id}
+        }
+    ).then(() => {
+        res.redirect("/clientes");
+    }).catch((error) => {
+        console.log(`Ocorreu um erro ao alterar o cliente. Erro: ${error}`)
     });
 });
 
