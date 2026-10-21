@@ -8,7 +8,7 @@ const connection = new Sequelize({
     dialect: 'mysql',
     host: 'localhost',
     username: 'root',
-    password: '',
+    password: 'admin',
     // Esta linha precisa estar comentada na primeira execução do projeto
     database: 'loja_relacional',
     timezone: '-03:00'

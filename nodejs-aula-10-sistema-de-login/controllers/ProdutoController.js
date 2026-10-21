@@ -1,12 +1,13 @@
 import express from 'express';
 import Produto from '../models/Produto.js';
-import { where } from 'sequelize';
+// Importando o Middleware de autenticação
+import Auth from "../middlewares/Auth.js";
 
 const route = express.Router();
 
 
 // ROTA PRODUTOS
-route.get("/produtos",function(req,res){
+route.get("/produtos", Auth, function(req,res){
     Produto.findAll().then((produtos) => {
         res.render("produtos", {
             produtos: produtos
@@ -17,7 +18,7 @@ route.get("/produtos",function(req,res){
 
 });
 
-route.get("/produtos/excluir/:id", (req, res) => {
+route.get("/produtos/excluir/:id", Auth, (req, res) => {
     const id = req.params.id;
 
     Produto.destroy({
@@ -29,7 +30,7 @@ route.get("/produtos/excluir/:id", (req, res) => {
     })
 })
 
-route.get("/produtos/editar/:id", (req, res) => {
+route.get("/produtos/editar/:id", Auth, (req, res) => {
     const id = req.params.id;
     Produto.findByPk(id).then(produto => {
         res.render("produtosEditar", {
@@ -40,7 +41,7 @@ route.get("/produtos/editar/:id", (req, res) => {
     });
 });
 
-route.post("/produtos/alterar", (req, res) => {
+route.post("/produtos/alterar", Auth, (req, res) => {
     const id = req.body.id
     const nome  = req.body.nome
     const preco = req.body.preco

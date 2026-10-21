@@ -3,10 +3,13 @@ import Pedido from "../models/Pedido.js";
 // Importanto o Model de Cliente
 import Cliente from "../models/Cliente.js";
 
+// Importando o Middleware de autenticação
+import Auth from "../middlewares/Auth.js";
+
 const route = express.Router();
 
 // ROTA PEDIDOS
-route.get("/pedidos", function (req, res) {
+route.get("/pedidos", Auth, function (req, res) {
   Promise.all([
     // Listando todos os pedidos
     Pedido.findAll({
@@ -31,7 +34,7 @@ route.get("/pedidos", function (req, res) {
 });
 
 // Rota de cadastro de pedidos
-route.post("/pedidos/cadastrar", (req, res) => {
+route.post("/pedidos/cadastrar", Auth, (req, res) => {
     // Capturando os dados do formulário
     const numero = req.body.numero;
     const valor = req.body.valor;
@@ -47,7 +50,7 @@ route.post("/pedidos/cadastrar", (req, res) => {
     });
 });
 
-route.get("/pedidos/excluir/:id", (req, res) => {
+route.get("/pedidos/excluir/:id", Auth, (req, res) => {
   const id = req.params.id;
   Pedido.destroy({
     where: { id: id },
@@ -60,7 +63,7 @@ route.get("/pedidos/excluir/:id", (req, res) => {
     });
 });
 
-route.get("/pedidos/editar/:id", (req, res) => {
+route.get("/pedidos/editar/:id", Auth, (req, res) => {
   const id = req.params.id;
   Pedido.findByPk(id)
     .then((pedido) => {
@@ -73,7 +76,7 @@ route.get("/pedidos/editar/:id", (req, res) => {
     });
 });
 
-route.post("/pedidos/alterar", (req, res) => {
+route.post("/pedidos/alterar", Auth, (req, res) => {
   const id = req.body.id;
   const numero = req.body.numero;
   const valor = req.body.valor;

@@ -3,8 +3,23 @@
 import express from 'express';
 // Importando o arquivo de conexão do Sequelize
 import connection from './config/sequelize-config.js';
+
+// importando o Express-Session
+import session from "express-session";
+
+// Importando o Middleware de autenticação
+import Auth from "./middlewares/Auth.js";
+
 // Iniciando o Express 
 const app = express();
+
+// Configurando a Sessão de usuário
+app.use(session({
+    secret: "segredoloja",
+    cookie: {maxAge: 3600000}, // Sessão expira em 1 hora
+    saveUninitialized: false,
+    resave: false
+}));
 
 // configuração do Express
 app.use(express.urlencoded({ extended: true }));
@@ -64,7 +79,7 @@ app.use('/', ProdutoController);
 app.use('/', UsuariosController);
 
 // ROTA PRINCIPAL
-app.get("/",function(req,res){
+app.get("/", Auth, function(req,res){
     res.render("index")
 })
 
